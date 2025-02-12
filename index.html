@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Invoice Billing</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+     <script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      
+
+   
+             
+    <style>
+      @media screen {
+        
+      }
+      .input-group-text{
+        width: 85px;
+      }
+      
+      @media print{
+        .btn{
+          display: none;
+        }
+        .Noprint{
+          display: none;
+        }
+        .form-control{
+          border: 0px;  
+        }
+        .input-group-text{
+          border: 0px;
+          background-color: white;
+        }
+        
+
+
+      }
+
+     </style>
+     <script>
+      function Getprint()
+      {
+      window.print();
+      }
+
+     function btnadd(){
+      var v= $("#TRow").clone().appendTo("#TBody");
+      $(v).find("input").val('');
+      
+      
+
+     }
+
+     function btndel(v){
+      $(v).parent().parent().remove();
+      GetTotal();
+
+
+
+              }
+              function calc(v){
+                var index= $(v).parent().parent().index();
+                var qnty=document.getElementsByName("qnty")[index].value;
+                var rate=document.getElementsByName("rate")[index].value;
+
+                var amt = qnty*rate;
+                document.getElementsByName("amt")[index].value =amt;
+                GetTotal();
+              
+              
+              
+              }
+
+              function GetTotal(){
+                var sum =0;
+                 var amts= document.getElementsByName("amt");
+                 for(let index =  0; index < amts.length; index++)
+                 {
+                  var amt = amts[index].value;
+                  sum = +(sum) + +(amt) ;
+
+
+                 }
+                 document.getElementById("FTotal").value = sum ;
+
+                 var gst = document. getElementById("FGST").value ;
+                 var net = sum + gst;
+                 document. getElementById("FNet").value = net ;
+
+
+
+
+              }
+              $(document).ready(function(){
+
+                $('#FGST').change(function(){
+                  let b = $('#FNet').val();
+                  alert(b);
+                  let a = $('#FGST').val();
+                  let tn = b*a/100;
+                  alert(tn);
+                  b = parseFloat(b) +parseFloat(tn);
+                  alert(b);
+                  $('#FNet').val(b);// = b;
+                })
+              })
+              function MakePDF(){
+              window.jsPDF = window.jspdf .jspdf;
+              var myPDF = new jsPDF();
+              var myHTML = document.querySelector("#MyInv");
+              $('button').hide();
+
+              myPDF.html(myHTML,{
+                callback:  function(doc){
+                  myPDF.save('FileName.pdf');
+                  $('button').show();
+                },
+                x:5,
+                y:5,
+                width: 200,
+                windowWidth:1000
+              });
+            }
+        
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Hello world!", 100, 100);
+            doc.save("newFile.pdf");                
+        }            
+            
+
+                      </script>
+     
+
+     
+
+          
+
+  </head>
+
+  <body>
+    <div class="container ">
+      
+      <form method="post" action="https://script.google.com/macros/s/AKfycby-2WZSeVzfJQCaMcrMmSoKg1BmXjofXJAeY6CHceZ75er85ODOkBUVndcXHLOTBRevxA/exec">
+        
+
+          
+        <div class="card">
+            <div class="card-header text-center">
+              <h4>INVOICE </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">CUSTOMER</span>
+                            <input type="text" class="form-control" placeholder="CUSTOMER" name="cust_nm" required minlength="4">
+                          </div>
+
+                          <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Address</span>
+                            <input type="text" class="form-control" placeholder="Address" name="addr">
+                          </div>
+  
+
+                          <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">City</span>
+                            <input type="text" class="form-control" placeholder="City" name="city">
+                          </div>
+  
+                          
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Inv.No</span>
+                            <input type="text" class="form-control" placeholder="Inv.No" name="inv_no">
+                          </div>
+  
+                          <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Inv.Date</span>
+                            <input type="date" class="form-control" placeholder="Inv.Date" name="inv_dt">
+                          </div>
+  
+
+                  </div>
+
+                  <table class="table table-bordered">
+                    <thead class="table-success">
+                      <tr>                        
+                        <th scope="col" >#</th>
+                        <th scope="col" class="text-end">particular</th>
+                        <th scope="col" class="text-end" >Qnty</th>
+                        <th scope="col"  class="text-end" >Rate</th>
+                        <th scope="col" class="text-end" >Amt</th> 
+                        <th><button type="button" class="btn btn-success" onclick="btnadd()" >+</button></th>
+                          <th scope="col" class="Noprint"></th>
+                      
+                    
+                    </thead>
+                    <tbody id="TBody">
+                      <tr id="TRow" >
+
+                        <th scope="row">1</th>
+                        <td><input type="text" class="form-control" name="item_nm"> </td>
+                        <td><input type="number" class="form-control text-end" name="qnty" onchange="calc(this);"></td>
+                        <td><input type="number" class="form-control text-end" name="rate" onchange="calc(this);"></td>
+                        <td><input type="number" class="form-control text-end" name="amt" value="" readonly=""></td>
+                        <td class="Noprint"><button type="button" class="btn btn-danger" onclick="btndel(this)">X</button></td>
+                      </tr>
+
+                      
+
+
+                      
+                    </tbody>
+                  </table>
+
+                  <div class="row">
+                    <div class="col-8">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <button type="button" class="btn btn-primary" onclick="Getprint()">print</button>
+                      
+                      <button type="button" class="btn btn-primary" onclick="generatePDF()">PDF</button>
+                      </button>
+                      
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group mb-3">
+                      
+                            <span class="input-group-text" id="basic-addon1">Total</span>
+                            <input type="number" class="form-control" id="FTotal" name="FTotal" disabled="">
+                          </div>
+                          <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">GST</span>
+                            <input type="number" class="form-control" id="FGST" name="FGST" GetTotal()>
+                          </div>
+                          <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Net.Amt</span>
+                            <input type="number" class="form-control" id="FNet" name="FNet" disabled="" >
+                          </div> 
+  
+  
+  
+                  </div>
+                
+                
+            
+
+              </div>
+              
+          </div>
+            
+
+
+
+        </div>
+        </form>
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
